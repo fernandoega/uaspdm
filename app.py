@@ -44,4 +44,4 @@ if uploaded_file is not None:
         fig, ax = plt.subplots()
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
         disp.plot(ax=ax, cmap='Blues')
-        st.pyplot(fig)
+        st.pyplot(fig) 	
