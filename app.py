@@ -2,10 +2,10 @@ import streamlit as st
 import pickle
 
 # Load model yang sudah dilatih
-with open("svm_model.pkl", "rb") as f:
+with open("svm_tiktok_model.pkl", "rb") as f:
     model = pickle.load(f)
 
-with open("tfidf_vectorizer.pkl", "rb") as f:
+with open("vectorizer_tiktok.pkl", "rb") as f:
     vectorizer = pickle.load(f)
 
 with open("label_encoder.pkl", "rb") as f:
