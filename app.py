@@ -1,23 +1,47 @@
 import streamlit as st
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Analisis Sentimen TikTok Shop", layout="centered")
+st.title("Analisis Sentimen TikTok Shop - SVM")
 
-st.title("🛍️ Analisis Sentimen TikTok Shop")
+# Upload dataset
+uploaded_file = st.file_uploader("Upload dataset CSV", type="csv")
 
-st.write("Masukkan komentar pengguna di bawah ini untuk melihat prediksi sentimennya:")
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.write("Data Preview:", df.head())
 
-# Input teks dari pengguna
-user_input = st.text_area("Komentar Pengguna", placeholder="Contoh: Pengiriman cepat dan produknya bagus banget!")
+    # Pilih fitur dan label
+    feature_col = st.selectbox("Pilih kolom fitur (teks)", df.columns)
+    label_col = st.selectbox("Pilih kolom label (kelas)", df.columns)
 
-# Tombol untuk analisis
-if st.button("Analisis Sentimen"):
-    if user_input:
-        # Logika simulasi prediksi
-        if "bagus" in user_input.lower() or "cepat" in user_input.lower():
-            st.success("✅ Sentimen Positif")
-        elif "jelek" in user_input.lower() or "lama" in user_input.lower():
-            st.error("❌ Sentimen Negatif")
-        else:
-            st.info("ℹ️ Sentimen Netral / Tidak Teridentifikasi")
-    else:
-        st.warning("⚠️ Harap masukkan komentar terlebih dahulu.")
+    if st.button("Latih Model SVM"):
+        # Preprocessing (vectorisasi)
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        X_text = df[feature_col].astype(str)
+        y = df[label_col]
+
+        vectorizer = TfidfVectorizer()
+        X = vectorizer.fit_transform(X_text)
+
+        # Train-test split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Latih model
+        model = SVC(kernel='linear')
+        model.fit(X_train, y_train)
+
+        # Prediksi dan evaluasi
+        y_pred = model.predict(X_test)
+        cm = confusion_matrix(y_test, y_pred)
+
+        # Tampilkan confusion matrix
+        st.write("### Confusion Matrix")
+        fig, ax = plt.subplots()
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+        disp.plot(ax=ax, cmap='Blues')
+        st.pyplot(fig) 	
