@@ -5,3 +5,4 @@ matplotlib
 numpy
 nltk
 Sastrawi
+joblib

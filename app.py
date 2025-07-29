@@ -1,15 +1,10 @@
 import streamlit as st
-import pickle
+import joblib
 
 # Load model yang sudah dilatih
-with open("svm_tiktok_model.pkl", "rb") as f:
-    model = pickle.load(f)
-
-with open("vectorizer_tiktok.pkl", "rb") as f:
-    vectorizer = pickle.load(f)
-
-with open("label_encoder.pkl", "rb") as f:
-    label_encoder = pickle.load(f)
+model = joblib.load("svm_tiktok_model.joblib")
+vectorizer = joblib.load("vectorizer_tiktok.joblib")
+label_encoder = joblib.load("label_encoder.joblib")
 
 # UI
 st.set_page_config(page_title="Analisis Sentimen TikTok Shop", layout="centered")
